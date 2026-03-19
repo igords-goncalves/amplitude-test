@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Moon, Sun } from "lucide-react";
 import { ampli } from "@/ampli";
+import * as amplitude from '@amplitude/unified';
 
 const japaneseCities = [
   { value: "tokyo", label: "東京 (Tokyo)" },
@@ -44,6 +45,10 @@ export default function Home() {
     const newTheme = checked ? "dark" : "light";
     setTheme(newTheme);
     console.log(`テーマが変更されました (Theme changed): ${newTheme}`);
+
+    amplitude.track("Theme Switched", {
+      theme: newTheme,
+    })
   };
 
   return (

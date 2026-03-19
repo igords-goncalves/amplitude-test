@@ -6,14 +6,14 @@ import { ampli } from "@/ampli";
 
 export function AmplitudeBootstrap() {
   useEffect(() => {
-    // amplitude.initAll(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!, {
-    //   analytics: {
-    //     autocapture: false,
-    //   },
-    //   sessionReplay: {
-    //     sampleRate: 0.0, // Disable session replay by setting the sample rate to 0
-    //   },
-    // });
+    amplitude.initAll(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!, {
+      analytics: {
+        autocapture: false,
+      },
+      sessionReplay: {
+        sampleRate: 0.0, // Disable session replay by setting the sample rate to 0
+      },
+    });
 
     ampli.load({
       client: {
