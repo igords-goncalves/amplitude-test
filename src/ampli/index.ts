@@ -51,6 +51,13 @@ export type LoadOptionsWithClientInstance = LoadOptionsBase & { client: { instan
 
 export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance;
 
+export interface CitySelectedProperties {
+  /**
+   * City selected by user
+   */
+  city: string;
+}
+
 export interface LogMessageTriggeredProperties {
   /**
    * Any label used in buttons elements
@@ -60,6 +67,16 @@ export interface LogMessageTriggeredProperties {
    * Message trigered when the event is triggered by user.
    */
   log_message: string;
+}
+
+export class CitySelected implements BaseEvent {
+  event_type = 'City Selected';
+
+  constructor(
+    public event_properties: CitySelectedProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
 }
 
 export class LogMessageTriggered implements BaseEvent {
@@ -179,6 +196,25 @@ export class Ampli {
     }
 
     return this.amplitude!.track(event, undefined, options);
+  }
+
+  /**
+   * City Selected
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/igor-goncalves/Amplitude%20Test/events/first-branch-test/latest/City%20Selected)
+   *
+   * This event is triggered when a user selects a city from a list or dropdown within the application. It captures the action of choosing a specific city to tailor content or settings accordingly.
+   *
+   * Owner: Igor dos Santos Gonçalves Silva
+   *
+   * @param properties The event's properties (e.g. city)
+   * @param options Amplitude event options.
+   */
+  citySelected(
+    properties: CitySelectedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new CitySelected(properties), options);
   }
 
   /**

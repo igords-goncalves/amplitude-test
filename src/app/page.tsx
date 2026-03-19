@@ -39,6 +39,9 @@ export default function Home() {
     if (!value) return;
     const city = japaneseCities.find((c) => c.value === value);
     console.log(`都市が選択されました (City selected): ${city?.label}`);
+    ampli.citySelected({
+      city: city!.label
+    })
   };
 
   const handleThemeToggle = (checked: boolean) => {
