@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Moon, Sun } from "lucide-react";
 import { ampli } from "@/ampli";
 import * as amplitude from '@amplitude/unified';
@@ -25,6 +27,8 @@ const japaneseCities = [
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
+  const [reviewText, setReviewText] = useState("");
+  const [reviewError, setReviewError] = useState("");
 
   const handleButtonClick = () => {
     const logMessage = "こんにちは、イベントが発生しました (Hello, an event has occurred)";
@@ -53,6 +57,19 @@ export default function Home() {
       theme: newTheme,
     })
   };
+
+  const handleReviewSubmit = () => {
+    if (!reviewText.trim()) {
+      setReviewError("レビューを入力してください (Please enter a review)");
+      console.log("送信エラー: レビューが空です (Submit error: Review is empty)");
+      return;
+    }
+    setReviewError("");
+    console.log(`レビューが送信されました (Review submitted): ${reviewText}`);
+    setReviewText("");
+  };
+
+  const REVIEW_MAX_LENGTH = 200;
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-background">
@@ -103,6 +120,31 @@ export default function Home() {
               checked={theme === "dark"}
               onCheckedChange={handleThemeToggle}
             />
+          </section>
+
+          {/* Review Text */}
+          <section className="flex flex-col gap-3">
+            <Label className="text-sm font-medium">レビュー (Review)</Label>
+            <Textarea
+              placeholder="レビューを入力してください (Enter your review)"
+              value={reviewText}
+              onChange={(e) => {
+                if (e.target.value.length <= REVIEW_MAX_LENGTH) {
+                  setReviewText(e.target.value);
+                  if (reviewError) setReviewError("");
+                }
+              }}
+              className={reviewError ? "border-destructive" : ""}
+            />
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span className={reviewError ? "text-destructive" : ""}>
+                {reviewError}
+              </span>
+              <span>{reviewText.length}/{REVIEW_MAX_LENGTH}</span>
+            </div>
+            <Button onClick={handleReviewSubmit} className="w-full">
+              送信する (Submit)
+            </Button>
           </section>
         </div>
       </main>
