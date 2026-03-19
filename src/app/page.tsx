@@ -1,63 +1,101 @@
-import Image from "next/image";
+"use client";
+
+import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Moon, Sun } from "lucide-react";
+import { ampli } from "@/ampli";
+
+const japaneseCities = [
+  { value: "tokyo", label: "東京 (Tokyo)" },
+  { value: "osaka", label: "大阪 (Osaka)" },
+  { value: "kyoto", label: "京都 (Kyoto)" },
+  { value: "sapporo", label: "札幌 (Sapporo)" },
+  { value: "fukuoka", label: "福岡 (Fukuoka)" },
+];
 
 export default function Home() {
+  const { theme, setTheme } = useTheme();
+
+  const handleButtonClick = () => {
+    const logMessage = "こんにちは、イベントが発生しました (Hello, an event has occurred)";
+    console.log(logMessage);
+    ampli.logMessageTriggered({
+      label: "アクションを実行 (Execute Action)",
+      log_message: logMessage
+    })
+  };
+
+  const handleCityChange = (value: string | null) => {
+    if (!value) return;
+    const city = japaneseCities.find((c) => c.value === value);
+    console.log(`都市が選択されました (City selected): ${city?.label}`);
+  };
+
+  const handleThemeToggle = (checked: boolean) => {
+    const newTheme = checked ? "dark" : "light";
+    setTheme(newTheme);
+    console.log(`テーマが変更されました (Theme changed): ${newTheme}`);
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="flex flex-col flex-1 items-center justify-center bg-background">
+      <main className="flex flex-col items-center gap-12 p-8 max-w-md w-full">
+        <header className="text-center">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Amplitude Test
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-muted-foreground mt-2">
+            ユーザーアクションのシミュレーション (User Action Simulation)
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+        </header>
+
+        <div className="flex flex-col gap-8 w-full">
+          {/* Action Button */}
+          <section className="flex flex-col gap-3">
+            <Label className="text-sm font-medium">アクションボタン (Action Button)</Label>
+            <Button onClick={handleButtonClick} className="w-full">
+              アクションを実行 (Execute Action)
+            </Button>
+          </section>
+
+          {/* City Select */}
+          <section className="flex flex-col gap-3">
+            <Label className="text-sm font-medium">都市を選択 (Select City)</Label>
+            <Select onValueChange={handleCityChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="都市を選んでください (Please select a city)" />
+              </SelectTrigger>
+              <SelectContent>
+                {japaneseCities.map((city) => (
+                  <SelectItem key={city.value} value={city.value}>
+                    {city.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </section>
+
+          {/* Theme Toggle */}
+          <section className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sun className="h-4 w-4" />
+              <Label className="text-sm font-medium">テーマ切替 (Theme Toggle)</Label>
+              <Moon className="h-4 w-4" />
+            </div>
+            <Switch
+              checked={theme === "dark"}
+              onCheckedChange={handleThemeToggle}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </section>
         </div>
       </main>
     </div>
