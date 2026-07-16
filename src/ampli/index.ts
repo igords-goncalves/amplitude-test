@@ -69,6 +69,29 @@ export interface LogMessageTriggeredProperties {
   log_message: string;
 }
 
+export interface ThemeSwitchedProperties {
+  "[Amplitude] Page Domain"?: any;
+  "[Amplitude] Page Location"?: any;
+  "[Amplitude] Page Path"?: any;
+  /**
+   * Captures the page title of the page where the element was clicked.
+   *
+   * For example, if the page where the element was clicked has: <title>Amplitude</title>
+   *
+   * The value would be: Amplitude
+   */
+  "[Amplitude] Page Title"?: any;
+  /**
+   * Captures the URL of the page where the element was clicked.
+   *
+   * For example, a value of https://www.amplitude.com means that the element clicked was on this page.
+   */
+  "[Amplitude] Page URL"?: any;
+  "[Amplitude] Previous Page Location"?: any;
+  "[Amplitude] Previous Page Type"?: any;
+  theme?: any;
+}
+
 export class CitySelected implements BaseEvent {
   event_type = 'City Selected';
 
@@ -84,6 +107,16 @@ export class LogMessageTriggered implements BaseEvent {
 
   constructor(
     public event_properties: LogMessageTriggeredProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class ThemeSwitched implements BaseEvent {
+  event_type = 'Theme Switched';
+
+  constructor(
+    public event_properties?: ThemeSwitchedProperties,
   ) {
     this.event_properties = event_properties;
   }
@@ -234,6 +267,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new LogMessageTriggered(properties), options);
+  }
+
+  /**
+   * Theme Switched
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/igor-goncalves/Amplitude%20Test/events/first-branch-test/latest/Theme%20Switched)
+   *
+   * This event captures when a user changes the application’s visual theme, such as switching between light and dark modes. It is triggered immediately after the theme selection is updated.
+   *
+   * @param properties The event's properties (e.g. [Amplitude] Page Domain)
+   * @param options Amplitude event options.
+   */
+  themeSwitched(
+    properties?: ThemeSwitchedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new ThemeSwitched(properties), options);
   }
 }
 

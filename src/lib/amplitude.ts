@@ -1,30 +1,30 @@
 "use client";
 
 import { useEffect } from "react";
-import * as amplitude from "@amplitude/unified";
+import * as amplitude from "@amplitude/analytics-browser";
 import { ampli } from "@/ampli";
 
 export function AmplitudeBootstrap() {
-  useEffect(() => {
-    amplitude.initAll(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!, {
-      analytics: {
-        autocapture: false,
-      },
-      sessionReplay: {
-        sampleRate: 0.0, // Disable session replay by setting the sample rate to 0
-      },
-    });
-
-    ampli.load({
-      client: {
-        apiKey: process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!,
-        configuration: {
+    useEffect(() => {
+        amplitude.init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!, undefined, {
             autocapture: false,
-        }
-      }
-    })
-    console.info("Amplitude initialized");
-  }, []);
+        });
 
-  return null;
+        ampli.load({
+            client: {
+                instance: amplitude,
+            },
+        });
+
+        // const indentifyEvent = new amplitude.Identify();
+        // indentifyEvent.unset("ampli_test");
+
+        // amplitude.identify(indentifyEvent);
+
+        console.info(
+            "Amplitude client instance should be the same as the one initialized",
+        );
+    }, []);
+
+    return null;
 }

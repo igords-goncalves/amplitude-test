@@ -15,7 +15,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Moon, Sun } from "lucide-react";
 import { ampli } from "@/ampli";
-import * as amplitude from '@amplitude/unified';
+import { Identify } from '@amplitude/analytics-browser';
+import * as amplitude from '@amplitude/analytics-browser';
 
 const japaneseCities = [
   { value: "tokyo", label: "東京 (Tokyo)" },
@@ -39,10 +40,17 @@ export default function Home() {
     })
   };
 
-  const handleCityChange = (value: string | null) => {
+  const handleCityChange = async (value: string | null) => {
     if (!value) return;
+  
     const city = japaneseCities.find((c) => c.value === value);
     console.log(`都市が選択されました (City selected): ${city?.label}`);
+
+    const identifyEvent = new Identify();
+    identifyEvent.set("preferred_city", `${city?.label}`); // Dinâmico ...
+
+    amplitude.identify(identifyEvent);
+
     ampli.citySelected({
       city: city!.label
     })
@@ -53,8 +61,16 @@ export default function Home() {
     setTheme(newTheme);
     console.log(`テーマが変更されました (Theme changed): ${newTheme}`);
 
-    amplitude.track("Theme Switched", {
-      theme: newTheme,
+    // amplitude.track("Theme Switched", {
+    //   theme: newTheme,
+    // })
+    // const identifyEvent = new amplitude.Identify();
+    // identifyEvent.set("preferred_theme", newTheme);
+
+    // amplitude.identify(identifyEvent);
+
+    ampli.themeSwitched({
+      theme: newTheme
     })
   };
 
