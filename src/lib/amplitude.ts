@@ -8,19 +8,19 @@ export function AmplitudeBootstrap() {
     useEffect(() => {
         amplitude.init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!, undefined, {
             autocapture: false,
+            serverUrl: "/api/ampli-proxy",
+            transport: "fetch"
         });
-
+        
         ampli.load({
             client: {
                 instance: amplitude,
+                configuration: {
+                    serverUrl: "/api/ampli-proxy",
+                    transport: "fetch"
+                }
             },
         });
-
-        // const indentifyEvent = new amplitude.Identify();
-        // indentifyEvent.unset("ampli_test");
-
-        // amplitude.identify(indentifyEvent);
-
         console.info(
             "Amplitude client instance should be the same as the one initialized",
         );

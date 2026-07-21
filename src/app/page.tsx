@@ -51,6 +51,8 @@ export default function Home() {
 
     amplitude.identify(identifyEvent);
 
+    console.log(amplitude.getDeviceId());
+
     ampli.citySelected({
       city: city!.label
     })
@@ -60,14 +62,6 @@ export default function Home() {
     const newTheme = checked ? "dark" : "light";
     setTheme(newTheme);
     console.log(`テーマが変更されました (Theme changed): ${newTheme}`);
-
-    // amplitude.track("Theme Switched", {
-    //   theme: newTheme,
-    // })
-    // const identifyEvent = new amplitude.Identify();
-    // identifyEvent.set("preferred_theme", newTheme);
-
-    // amplitude.identify(identifyEvent);
 
     ampli.themeSwitched({
       theme: newTheme
